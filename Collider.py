@@ -27,6 +27,11 @@ class Collider:
                 collisions.add(other)
         return collisions
 
+    @staticmethod
+    def DrawCollisions():
+        for collider in Collider.colliders:
+            collider.DrawCollider()
+
     def OnCollision(self, other):
         pass
 
@@ -70,19 +75,54 @@ class Collectible(Collider):
 class Spike(Collider):
     def __init__(self,x,y,width,height,direction):
         super().__init__(x,y,width,height)
-        app.direction = direction
+        self.direction = direction
 
-    def DrawSpike(self):
-        numOfSpikes = self.width//10 + 1
-        for i in range(numOfSpikes):
-            pass
-            #drawPolygon()
+    def DrawCollider(self):
+        if self.direction == 'up' or self.direction == 'down':
+            numOfSpikes = self.width//10 + 1
+            x = self.x - (10 * numOfSpikes - self.width)/2
+            if self.direction == 'up':
+                for i in range(numOfSpikes):
+                    drawPolygon(x+10*i, self.y+self.height,
+                                x+10*i+5, self.y,
+                                x+10*(i+1), self.y+self.height,
+                                fill='white', border='black')
+            else:
+                for i in range(numOfSpikes):
+                    drawPolygon(x+10*i, self.y,
+                                x+10*i+5, self.y+self.height,
+                                x+10*(i+1), self.y,
+                                fill='white', border='black')
+        elif self.direction == 'left' or self.direction == 'right':
+            numOfSpikes = self.height//10 + 1
+            y = self.y - (10 * numOfSpikes - self.height)/2
+            if self.direction == 'left':
+                for i in range(numOfSpikes):
+                    drawPolygon(self.x+self.width, y+10*i,
+                                self.x, y+10*i+5,
+                                self.x+self.width, y+10*(i+1),
+                                fill='white',border='black')
+            else:
+                for i in range(numOfSpikes):
+                    drawPolygon(self.x, y+10*i,
+                                self.x+self.width, y+10*i+5,
+                                self.x, y+10*(i+1),
+                                fill='white',border='black')
 
     def OnCollision(self, other):
         if isinstance(other,Player):
             other.respawn()
 
 class Goal(Collider):
+    def __init__(self,app,x,y,width,height):
+        super().__init__(x,y,width,height)
+        self.app = app
+    
+    def DrawCollider(self):
+        cx, cy = self.x + .5*self.width, self.y + .5*self.height
+        r = 1.5 * max(self.width, self.height)
+        drawCircle(cx, cy, r, fill='orange')
+
     def OnCollision(self, other):
         if isinstance(other,Player):
             self.app.gameOver = True
