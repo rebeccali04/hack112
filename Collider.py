@@ -54,18 +54,25 @@ class Player(Collider):
         super().__init__(x, y, width, height)
         self.dx = 0
         self.dy = 1 #change back to 1
-        self.jumpMax = 10
+        self.jumpMax = 30
         self.jumpVal = 0
-        self.defaultDy = 1 #this is moving down
+        self.defaultDy = 1#this is moving down
         self.isJumping = False
         self.point =0
         self.onPlatform = True
+        self.spawnX = x
+        self.spawnY = y
+    
+    def respawn(self):
+        self.x = self.spawnX
+        self.y = self.spawnY
+        self.point = 0
     
     def turnLeft(self):
-        self.dx = -1
+        self.dx = -2
 
     def turnRight(self):
-        self.dx = 1
+        self.dx = 2
 
     #called by key press up 
     def turnUp(self):
@@ -75,11 +82,10 @@ class Player(Collider):
             self.onPlatform = False
     
     def doJump(self):
-        
         #we know we're jumping rn, jump val starts at 10
         self.jumpVal-=1
         if self.jumpVal >0:
-            self.dy = -1 
+            self.dy = -1 #jump speed 
     
     def doMove(self):
         if self.jumpVal>0:
