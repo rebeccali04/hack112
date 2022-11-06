@@ -31,6 +31,10 @@ class Collider:
         for collider in Collider.colliders:
             collider.DrawCollider()
 
+    @staticmethod
+    def ClearColliders():
+        Collider.colliders = set()
+
     def OnCollision(self, other):
         pass
 
@@ -58,7 +62,7 @@ class Player(Collider):
         self.jumpVal = 0
         self.defaultDy = 1#this is moving down
         self.isJumping = False
-        self.point =0
+        self.points = 0
         self.onPlatform = True
         self.spawnX = x
         self.spawnY = y
@@ -69,7 +73,7 @@ class Player(Collider):
     def respawn(self):
         self.x = self.spawnX
         self.y = self.spawnY
-        self.point = 0
+        self.points = 0
     
     def turnLeft(self):
         self.dx = -2

@@ -8,8 +8,13 @@ def onAppStart(app):
     app.screen = None
     app.blockWidth = 30
     app.spacing = ((app.height-2*app.blockWidth)-(2*app.blockWidth))//5
+    reset(app)
+
+def reset(app):
+    Collider.ClearColliders()
     Draw.MakeLevel(app)
-    app.player = Player(200,200,30,60)
+    app.player = Player(200,470,30,60)
+    app.gameOver = False
 
 def redrawAll(app):
     if app.screen == None:
@@ -23,9 +28,10 @@ def redrawAll(app):
 def onKeyPress(app, key):
     if key == 'escape':
         Draw.BackToMenu(app)
+        reset(app)
 
 def onKeyHold(app,keys):
-    if app.screen == 0:
+    if app.screen == 0 and not app.gameOver:
         if 'up' in keys:
             app.player.turnUp()
         if 'left' in keys and 'right' in keys:
@@ -36,7 +42,7 @@ def onKeyHold(app,keys):
             app.player.turnRight()
 
 def onKeyRelease(app,key):
-    if app.screen == 0:
+    if app.screen == 0 and not app.gameOver:
         app.player.dx = 0
 
 def onMousePress(app, mouseX, mouseY):
@@ -47,11 +53,12 @@ def onStep(app):
     takeStep(app)
 
 def takeStep(app):
-    app.player.doMove()
-    collisions = app.player.GetCollisions()
-    for collider in collisions:
-        if isinstance(collider,Platform): app.player.onPlatform = True
-        collider.OnCollision(app.player)
+    if app.screen == 0 and not app.gameOver:
+        app.player.doMove()
+        collisions = app.player.GetCollisions()
+        for collider in collisions:
+            if isinstance(collider,Platform): app.player.onPlatform = True
+            collider.OnCollision(app.player)
 
 def main():
     runApp()

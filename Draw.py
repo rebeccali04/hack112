@@ -10,6 +10,12 @@ def Menu(app):
     drawRect(app.blockWidth, app.blockWidth, app.width-2*app.blockWidth,
             app.height-2*app.blockWidth, fill=None, border='blue')
     
+    drawLabel('You are the RED rad TA!', app.width/2, 430,
+              size=20)
+    drawLabel('Get to the student(orange circle) to help them.', app.width/2, 470,
+              size=20)
+    drawLabel('Collect knowledge(stars) on the way!', app.width/2, 510,
+              size=20)
     for i in range(2):
         label = GetButtonLabel(i)
         drawRect(app.width/2+4, 274+75*i, 175, 60,
@@ -83,3 +89,5 @@ def MakeLevel(app):
     #downfacing
     Spike(2*app.blockWidth+2*app.spacing,2*app.blockWidth, 
             app.blockWidth//2, app.blockWidth//2,'down')
+    Collectible(app.width-5*app.blockWidth,app.height-4*app.blockWidth, 10, 10)
+    Goal(app,740,100,10,10)
