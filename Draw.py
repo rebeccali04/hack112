@@ -1,10 +1,5 @@
 from cmu_cs3_graphics import *
-
-def onAppStart(app):
-    app.blockWidth = 30
-    app.width = 900
-    app.height = 600
-    app.screen = None
+from Collider import *
 
 def Menu(app):
     drawLabel('OH Dash!', app.width/2, 125,
@@ -49,30 +44,42 @@ def Manual(app):
     drawLabel('Press Esc to go back to menu', app.width/2, app.height/2+80,
               fill='blue', size=20)
 
-def Reset(app):
+def BackToMenu(app):
     app.screen = None
 
-def onMousePress(app, mouseX, mouseY):
-    if app.screen == None:
-        app.screen = GetButton(app, mouseX, mouseY)
+def Level():
+    Collider.DrawColliders()
 
-def onKeyPress(app, key):
-    if key == 'escape':
-        Reset(app)
+def MakeLevel(app):
+    Platform(app.blockWidth,app.blockWidth, app.width-2*app.blockWidth, app.blockWidth)
+    Platform(app.blockWidth,app.blockWidth, app.blockWidth, app.height-2*app.blockWidth)
+    Platform(app.width-3*app.blockWidth,app.blockWidth, 
+            2*app.blockWidth, app.height-2*app.blockWidth)
+    Platform(app.blockWidth,app.height-2*app.blockWidth,
+            app.width-2*app.blockWidth, app.blockWidth)
+    Platform(app.blockWidth,app.height-2*app.blockWidth,
+            app.width-2*app.blockWidth, app.blockWidth, )
+    Platform(2*app.blockWidth+1.5*app.spacing,2*app.blockWidth+app.spacing,
+            app.width-3*app.blockWidth-1.5*app.spacing, app.spacing, )
+    Platform(app.blockWidth,2*app.blockWidth+3*app.spacing, 
+            app.width-3*app.blockWidth-1.5*app.spacing, app.spacing, )
+    Platform(app.width-4*app.blockWidth,app.height-3*app.blockWidth,
+            3*app.blockWidth, app.blockWidth, )
+    Platform(app.width-4*app.blockWidth,app.height-3*app.blockWidth,
+            3*app.blockWidth, app.blockWidth, )
+    Platform(app.width-5*app.blockWidth,app.height-4*app.blockWidth,
+            app.blockWidth, 3, )
+    Platform(app.width-4*app.blockWidth,app.height-5*app.blockWidth,
+            app.blockWidth, 3, )
+    Platform(2*app.blockWidth,2*app.blockWidth+2*app.spacing,
+            app.blockWidth, 3, )
+    Platform(2*app.blockWidth+app.spacing,2*app.blockWidth+1.5*app.spacing,
+            app.blockWidth, 3, )
 
-def redrawAll(app):
-    if app.screen == None:
-        Menu(app)
-    elif app.screen == 1:
-        Menu(app)
-        Manual(app)
-    elif app.screen == 0:
-        Level(app)
-    
-def Level(app):
-    pass
-
-def main():
-    runApp()
-
-main()
+    Spike(app.width//2,app.height-2.5*app.blockWidth, 
+            app.blockWidth//2, app.blockWidth//2,'up')
+    Spike(app.width//2-30,1.5*app.blockWidth+3*app.spacing, 
+            app.blockWidth, app.blockWidth//2,'up')
+    #downfacing
+    Spike(2*app.blockWidth+2*app.spacing,2*app.blockWidth, 
+            app.blockWidth//2, app.blockWidth//2,'down')

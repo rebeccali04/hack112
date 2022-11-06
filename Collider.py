@@ -63,6 +63,9 @@ class Player(Collider):
         self.spawnX = x
         self.spawnY = y
     
+    def DrawCollider(self):
+        drawRect(self.x, self.y, self.width, self.height, fill='red')
+
     def respawn(self):
         self.x = self.spawnX
         self.y = self.spawnY
