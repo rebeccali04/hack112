@@ -2,6 +2,8 @@ from cmu_cs3_graphics import *
 from Collider import *
 
 def onAppStart(app):
+    app.width = 900
+    app.height = 600
     Platform(0,350,400,30)
     Spike(50,100,90,10,'down')
     Collectible(150,100,10,10)
