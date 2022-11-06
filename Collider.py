@@ -5,7 +5,6 @@ class Collider:
     def __init__(self, x, y, width, height):
         self.x, self.y = x, y
         self.width, self.height = width, height
-        self.dx = self.dy = 0
         Collider.colliders.add(self)
     
     def __repr__(self):
@@ -49,17 +48,61 @@ class Collider:
             bottom1 < top2 or bottom2 < top1): return False
         else: return True
 
+
+class Player(Collider):
+    def __init__(self, x, y, width, height):
+        super().__init__(x, y, width, height)
+        self.dx = 0
+        self.dy = 1 #change back to 1
+        self.jumpMax = 10
+        self.jumpVal = 0
+        self.defaultDy = 1 #this is moving down
+        self.isJumping = False
+        self.point =0
+        self.onPlatform = True
+    
+    def turnLeft(self):
+        self.dx = -1
+
+    def turnRight(self):
+        self.dx = 1
+
+    #called by key press up 
+    def turnUp(self):
+        #if not already in jump motion, jump 
+        if self.onPlatform:
+            self.jumpVal = self.jumpMax
+            self.onPlatform = False
+    
+    def doJump(self):
+        
+        #we know we're jumping rn, jump val starts at 10
+        self.jumpVal-=1
+        if self.jumpVal >0:
+            self.dy = -1 
+    
+    def doMove(self):
+        if self.jumpVal>0:
+            self.doJump()
+        else:
+            self.dy = self.defaultDy #not jumping? always same dy
+        
+        self.x+=self.dx
+        self.y+=self.dy
+
+
 class Platform(Collider):
     def DrawCollider(self):
         drawRect(self.x, self.y, self.width, self.height, fill='grey')
     
     def OnCollision(self, other):
         # we assume that other was not colliding with self in the previous frame
-        if isinstance(other,Collider):
+        if isinstance(other,Player):
             other.y -= other.dy
             if self.RectanglesOverlap(other):
                 other.y += other.dy
                 other.x -= other.dx
+
 
 class Collectible(Collider):
     def DrawCollider(self):
@@ -71,6 +114,7 @@ class Collectible(Collider):
         if isinstance(other,Player):
             other.points += 1
             Collider.colliders.discard(self)
+
 
 class Spike(Collider):
     def __init__(self,x,y,width,height,direction):
@@ -112,6 +156,7 @@ class Spike(Collider):
     def OnCollision(self, other):
         if isinstance(other,Player):
             other.respawn()
+
 
 class Goal(Collider):
     def __init__(self,app,x,y,width,height):
