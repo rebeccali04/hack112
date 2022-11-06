@@ -1,4 +1,4 @@
-from Player import Player
+from cmu_cs3_graphics import *
 
 class Collider:
     colliders = set()
@@ -30,6 +30,9 @@ class Collider:
     def OnCollision(self, other):
         pass
 
+    def DrawCollider(self):
+        pass
+
     def RectanglesOverlap(self, other):
         left1, top1, width1, height1 = self.x, self.y, self.width, self.height
         left2, top2, width2, height2 = other.x, other.y, other.width, other.height
@@ -42,6 +45,9 @@ class Collider:
         else: return True
 
 class Platform(Collider):
+    def DrawCollider(self):
+        drawRect(self.x, self.y, self.width, self.height, fill='grey')
+    
     def OnCollision(self, other):
         # we assume that other was not colliding with self in the previous frame
         if isinstance(other,Collider):
@@ -51,20 +57,32 @@ class Platform(Collider):
                 other.x -= other.dx
 
 class Collectible(Collider):
+    def DrawCollider(self):
+        cx, cy = self.x + .5*self.width, self.y + .5*self.height
+        r = 1.5 * max(self.width, self.height)
+        drawStar(cx, cy, r, 5, fill='blanchedalmond', border='black', roundness=60)
+    
     def OnCollision(self, other):
         if isinstance(other,Player):
             other.points += 1
             Collider.colliders.discard(self)
 
 class Spike(Collider):
+    def __init__(self,x,y,width,height,direction):
+        super().__init__(x,y,width,height)
+        app.direction = direction
+
+    def DrawSpike(self):
+        numOfSpikes = self.width//10 + 1
+        for i in range(numOfSpikes):
+            pass
+            #drawPolygon()
+
     def OnCollision(self, other):
         if isinstance(other,Player):
             other.respawn()
 
 class Goal(Collider):
-    def __init__(self,app,x,y,width,height):
-        self.app = app
-        super().__init__(x,y,width,height)
     def OnCollision(self, other):
         if isinstance(other,Player):
             self.app.gameOver = True
