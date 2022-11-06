@@ -28,7 +28,7 @@ class Collider:
         return collisions
 
     @staticmethod
-    def DrawCollisions():
+    def DrawColliders():
         for collider in Collider.colliders:
             collider.DrawCollider()
 
